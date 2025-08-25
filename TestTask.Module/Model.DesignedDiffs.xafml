@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application Title="TestTask">
+  <BOModel>
+    <Class Name="TestTask.Module.BusinessObjects.Cargo" DefaultDetailViewImage="BO_Product" ImageName="BO_Product" />
+    <Class Name="TestTask.Module.BusinessObjects.CargoPicket" ImageName="BO_Product_Group" />
+    <Class Name="TestTask.Module.BusinessObjects.HistoryRecord" ImageName="Action_Printing_Preview">
+      <AppearanceRules>
+        <AppearanceRule Id="@76f1f35f-00b3-4a1e-8836-e787095cae02" AppearanceItemType="Action" TargetItems="Delete, New" Visibility="Hide" IsNewNode="True" />
+      </AppearanceRules>
+      <OwnMembers>
+        <Member Name="CargoPicket" AllowEdit="False" LookupProperty="Cargo" />
+        <Member Name="ChangeDate" EditMaskType="DateTime" />
+        <Member Name="CurrentTotalWeight" AllowEdit="False" />
+        <Member Name="PicketInfo" AllowEdit="False" />
+        <Member Name="Site" AllowEdit="False" LookupProperty="CalculatedSiteNumber" />
+        <Member Name="Warehouse" AllowEdit="False" />
+      </OwnMembers>
+    </Class>
+    <Class Name="TestTask.Module.BusinessObjects.Picket" ImageName="ModelEditor_Class_Object">
+      <OwnMembers>
+        <Member Name="PicketNumber" AllowEdit="True" />
+        <Member Name="Site" LookupProperty="CalculatedSiteNumber" />
+      </OwnMembers>
+    </Class>
+    <Class Name="TestTask.Module.BusinessObjects.Site" ImageName="Action_EditModel" />
+    <Class Name="TestTask.Module.BusinessObjects.Warehouse" ImageName="BO_Address">
+      <AppearanceRules>
+        <AppearanceRule Id="@8047bdaf-70c8-4184-9544-2dc9e9d85e44" TargetItems="Delete, New" AppearanceItemType="Action" Visibility="Show" IsNewNode="True" />
+      </AppearanceRules>
+      <OwnMembers>
+        <Member Name="WarehouseNumber" AllowEdit="True" />
+      </OwnMembers>
+    </Class>
+  </BOModel>
+  <NavigationItems>
+    <Items>
+      <Item Id="Default">
+        <Items>
+          <Item Id="Warehouse_ListView" ChildItemsDisplayStyle="LargeIcons" />
+        </Items>
+      </Item>
+    </Items>
+  </NavigationItems>
+  <Options>
+    <LayoutManagerOptions RequiredFieldMark="*" />
+  </Options>
+  <SchemaModules>
+    <SchemaModule Name="SystemModule" Version="17.2.4.0" IsNewNode="True" />
+  </SchemaModules>
+  <Views>
+    <ListView Id="Cargo_CargoPickets_ListView" ImageName="BO_Product" />
+    <ListView Id="Cargo_ListView" ImageName="BO_Product" />
+    <ListView Id="Cargo_LookupListView" ImageName="BO_Product" />
+    <ListView Id="CargoPicket_ListView" IsGroupPanelVisible="True" IsFooterVisible="True" ShowAutoFilterRow="True">
+      <Columns>
+        <ColumnInfo Id="Weight">
+          <Summary>
+            <ColumnSummaryItem Id="Summary0" SummaryType="Sum" IsNewNode="True" />
+          </Summary>
+        </ColumnInfo>
+        <ColumnInfo Id="Picket">
+          <Summary>
+            <ColumnSummaryItem Id="Summary0" SummaryType="Count" IsNewNode="True" />
+          </Summary>
+        </ColumnInfo>
+      </Columns>
+    </ListView>
+    <DetailView Id="HistoryRecord_DetailView" AllowNew="False">
+      <Items>
+        <PropertyEditor Id="ActionType" AllowEdit="False" />
+        <PropertyEditor Id="ChangeDate" AllowEdit="False" />
+        <PropertyEditor Id="ChangedBy" AllowEdit="False" />
+      </Items>
+    </DetailView>
+    <ListView Id="HistoryRecord_ListView">
+      <Columns>
+        <ColumnInfo Id="ChangeDate" AllowEdit="False" />
+        <ColumnInfo Id="ActionType" AllowEdit="False" />
+        <ColumnInfo Id="ChangedBy" AllowEdit="False" />
+      </Columns>
+    </ListView>
+  </Views>
+</Application>

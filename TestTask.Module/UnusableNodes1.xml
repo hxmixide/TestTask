@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application>
+  <BOModel Id="BOModel">
+    <Class Name="TestTask.Module.BusinessObjects.HistoryRecord">
+      <OwnMembers Id="OwnMembers">
+        <Member Name="SiteNumber" Caption="Номер площадки" />
+      </OwnMembers>
+    </Class>
+  </BOModel>
+  <Views Id="Views">
+    <DetailView Id="HistoryRecord_DetailView">
+      <Items Id="Items">
+        <PropertyEditor Id="SiteNumber" AllowEdit="False" />
+      </Items>
+    </DetailView>
+    <ListView Id="HistoryRecord_ListView">
+      <Columns Id="Columns">
+        <ColumnInfo Id="SiteNumber" AllowEdit="False" />
+      </Columns>
+    </ListView>
+  </Views>
+</Application>

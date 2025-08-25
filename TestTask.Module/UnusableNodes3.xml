@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application>
+  <NavigationItems Id="NavigationItems">
+    <NavigationItem Id="History" Caption="История изменений">
+      <Items Id="Items">
+        <Item Id="HistoryRecords" ObjectViewId="HistoryRecord_ListView" Caption="История площадок" />
+      </Items>
+    </NavigationItem>
+  </NavigationItems>
+  <Views Id="Views">
+    <DetailView Id="HistoryRecord_DetailView">
+      <Items Id="Items">
+        <Node Id="changeDate" UnusableNodeName="ItemView" PropertyName="ChangeDate" />
+        <Node Id="actionType" UnusableNodeName="ItemView" PropertyName="ActionType" />
+        <Node Id="changedBy" UnusableNodeName="ItemView" PropertyName="ChangedBy" />
+        <Node Id="siteNumber" UnusableNodeName="ItemView" PropertyName="SiteNumber" />
+        <Node Id="warehouseInfo" UnusableNodeName="ItemView" PropertyName="WarehouseInfo" />
+      </Items>
+    </DetailView>
+    <ListView Id="HistoryRecord_ListView">
+      <Columns Id="Columns">
+        <ColumnInfo Id="@641c0227-5b95-4904-9dd8-47a681a34758" PropertyName="ChangeDate" Caption="Дата" />
+        <ColumnInfo Id="@6c83ff5f-9e88-48db-af41-2541ae4c5da6" PropertyName="ActionType" Caption="Действие" />
+        <ColumnInfo Id="@88af2c6f-61ec-4910-862f-976c38379658" PropertyName="SiteNumber" Caption="Номер площадки" />
+        <ColumnInfo Id="@72335ec4-276a-49d6-849d-91ca86002634" PropertyName="WarehouseInfo" Caption="Склад" />
+        <ColumnInfo Id="@fd66f97c-8e57-4b35-ae99-35a8a653e68a" PropertyName="ChangedBy" Caption="Пользователь" />
+      </Columns>
+    </ListView>
+  </Views>
+  <Validation Id="Validation">
+    <Rules Id="Rules">
+      <Node Id="DeleteHistoryRecordValidation" UnusableNodeName="RuleSet">
+        <Node Id="Predefined" UnusableNodeName="RuleSet" />
+        <Node Id="HistoryRecord_ProhibitDeletion" UnusableNodeName="Rule" />
+      </Node>
+    </Rules>
+  </Validation>
+</Application>

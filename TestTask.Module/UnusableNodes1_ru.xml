@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application>
+  <BOModel Id="BOModel">
+    <Class Name="TestTask.Module.BusinessObjects.Site">
+      <OwnMembers Id="OwnMembers">
+        <Member Name="SiteNumber" Caption="Номер площадки" DisplayFormat="" EditMask="" />
+      </OwnMembers>
+    </Class>
+  </BOModel>
+</Application>

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application>
+  <Views Id="Views">
+    <ListView Id="HistoryRecord_ListView">
+      <Columns Id="Columns">
+        <ColumnInfo Id="AllowDeletion" SortIndex="0" SortOrder="Descending" />
+      </Columns>
+    </ListView>
+  </Views>
+</Application>

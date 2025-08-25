@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application>
+  <BOModel Id="BOModel">
+    <Class Name="TestTask.Module.BusinessObjects.Cargo">
+      <OwnMembers Id="OwnMembers">
+        <Member Name="CargoType" Caption="Вид груза" />
+      </OwnMembers>
+    </Class>
+  </BOModel>
+</Application>

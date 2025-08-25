@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application>
+  <BOModel>
+    <Class Name="TestTask.Module.BusinessObjects.Cargo" Caption="Груз">
+      <OwnMembers>
+        <Member Name="CargoPickets" Caption="Груз на пикете" />
+        <Member Name="Name" Caption="Наименование" />
+      </OwnMembers>
+    </Class>
+    <Class Name="TestTask.Module.BusinessObjects.CargoPicket" Caption="Груз на пикете">
+      <OwnMembers>
+        <Member Name="Cargo" Caption="Груз" />
+        <Member Name="HistoryRecords" Caption="История грузов" />
+        <Member Name="Picket" Caption="Пикет" />
+        <Member Name="Weight" Caption="Вес" />
+      </OwnMembers>
+    </Class>
+    <Class Name="TestTask.Module.BusinessObjects.HistoryRecord" Caption="Изменение площадок">
+      <OwnMembers>
+        <Member Name="ActionType" Caption="Действие" />
+        <Member Name="CargoPicket" Caption="Груз" />
+        <Member Name="ChangeDate" Caption="Дата" EditMask="g" />
+        <Member Name="ChangedBy" Caption="Выполнено" />
+        <Member Name="CurrentTotalWeight" Caption="Текущий вес" DisplayFormat="# ##0.000" EditMask="# ##0.000" />
+        <Member Name="PicketInfo" Caption="Информация о пикете" />
+        <Member Name="Site" Caption="Номер площадки" />
+        <Member Name="Warehouse" Caption="Номер склада" />
+      </OwnMembers>
+    </Class>
+    <Class Name="TestTask.Module.BusinessObjects.Picket" Caption="Пикеты">
+      <OwnMembers>
+        <Member Name="Capacity" Caption="Вместимость" />
+        <Member Name="CargoPickets" Caption="Грузы на пикете" />
+        <Member Name="PicketNumber" Caption="Номер пикета" />
+        <Member Name="Site" Caption="Площадка" DisplayFormat="" />
+        <Member Name="Weight" Caption="Вес" />
+      </OwnMembers>
+    </Class>
+    <Class Name="TestTask.Module.BusinessObjects.Site" Caption="Площадки">
+      <OwnMembers>
+        <Member Name="CalculatedSiteNumber" Caption="Номер площадки" />
+        <Member Name="Capacity" Caption="Вместимость" />
+        <Member Name="HistoryRecords" Caption="История площадки" />
+        <Member Name="Pickets" Caption="Пикеты" />
+        <Member Name="Warehouse" Caption="Склад" />
+        <Member Name="Weight" Caption="Вес" />
+      </OwnMembers>
+    </Class>
+    <Class Name="TestTask.Module.BusinessObjects.Warehouse" Caption="Склад">
+      <OwnMembers>
+        <Member Name="HistoryRecords" Caption="История площадок" />
+        <Member Name="Sites" Caption="Площадки" />
+        <Member Name="WarehouseNumber" Caption="Номер склада" />
+      </OwnMembers>
+    </Class>
+  </BOModel>
+</Application>
