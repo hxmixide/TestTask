@@ -41,7 +41,7 @@ namespace TestTask.Module.BusinessObjects
 
         #region Методы
         // Метод, вызываемый при изменении свойств объекта
-       
+
         protected override void OnDeleting()
         {
             // Сохраняем ссылку на площадку перед удалением
@@ -69,7 +69,7 @@ namespace TestTask.Module.BusinessObjects
                 if (SetPropertyValue(nameof(PicketNumber), ref _picketNumber, value)) // Устанавливает новое значение
                 {
                     // При изменении номера пикета обновляем имя площадки
-                    if (Site != null)
+                    if (Site != null && !Session.IsObjectsLoading) // Избегаем двойного обращения к коллекции пикетов
                     {
                         var temp = Site.CalculatedSiteNumber;
                     }
@@ -79,6 +79,8 @@ namespace TestTask.Module.BusinessObjects
 
         [ModelDefault("DisplayFormat", "# ##0.000")] // Формат отображения числа
         [ModelDefault("EditMask", "# ##0.000")] // Маска ввода
+        [ModelDefault("AllowEdit", "false")] // Запрет редактирования
+
         public decimal Capacity
         {
             get { return _capacity; } // Возвращает значение вместимости

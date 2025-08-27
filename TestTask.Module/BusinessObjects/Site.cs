@@ -44,6 +44,7 @@ namespace TestTask.Module.BusinessObjects
         {
 
             base.OnSaving();
+    
             if (!IsSingleExecuteOnSaving())
             {
                
@@ -145,9 +146,12 @@ namespace TestTask.Module.BusinessObjects
             // Если пикеты не последовательные - выбрасываем исключение
             if (picketNumbers.Count > 1 && !isSequential)
             {
-               
+                foreach (var picket in Pickets.ToList())
+                {
+                    picket.Site = null;
+                }
                 throw new ArgumentException("Пикеты не могут разрываться в пределах одной площадки или пересекаться");
-
+            
             }
 
             // Возвращаем результат в зависимости от количества пикетов
