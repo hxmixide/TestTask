@@ -59,6 +59,12 @@ namespace TestTask.Module.BusinessObjects
         {
             get { return GetCollection<HistoryRecord>(nameof(HistoryRecords)); } // Возвращает коллекцию связанных данных и передает имя свойства связи
         }
+
+        [Association("Warehouse-Pickets")] // Связь с пикетами
+        public XPCollection<Picket> Pickets // Коллекция для работы со связанными объектами
+        {
+            get { return GetCollection<Picket>(nameof(Pickets)); } // Возвращает коллекцию связанных данных и передает имя свойства связи
+        }
         #endregion
     }
 } 

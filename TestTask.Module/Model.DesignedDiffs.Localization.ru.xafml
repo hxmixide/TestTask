@@ -34,6 +34,7 @@
         <Member Name="PicketNumber" Caption="Номер пикета" />
         <Member Name="Site" Caption="Площадка" DisplayFormat="" />
         <Member Name="Weight" Caption="Вес" />
+		<Member Name="FullPicketNumber" Caption="Номер пикета" />
       </OwnMembers>
     </Class>
     <Class Name="TestTask.Module.BusinessObjects.Site" Caption="Площадки">

@@ -11,22 +11,18 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using DevExpress.XtraEditors; 
-using DevExpress.Xpf.Core; 
-
+using DevExpress.XtraEditors;
+using DevExpress.Xpf.Core;
 
 namespace TestTask.Module.BusinessObjects
 {
-    /// <summary>
-    /// Груз на пикете 
-    /// </summary>
-    [DefaultClassOptions] // Стандартные настройки для класса
+    [DefaultClassOptions]
     public class CargoPicket : BaseObject
     {
         #region Поля 
-        private decimal _weight;       // Вес груза
-        private Picket _picket;       // Ссылка на пикет, где размещен груз
-        private Cargo _cargo;         // Ссылка на тип груза
+        private decimal _weight;
+        private Picket _picket;
+        private Cargo _cargo;
         #endregion
 
         public CargoPicket(Session session) : base(session)
@@ -40,37 +36,28 @@ namespace TestTask.Module.BusinessObjects
 
         #region Методы работы с историей изменений
 
-        // Обработчик сохранения объекта
         protected override void OnSaving()
-        { 
-        
-            // Проверка вместимости пикета перед сохранением
+        {
             if (Picket != null && IsSingleExecuteOnSaving())
             {
-                decimal newTotalWeight;
+                decimal totalWeightInSession = Picket.CargoPickets
+                    .Where(cp => !Session.IsNewObject(cp) || cp == this)
+                    .Sum(cp => cp.Weight);
 
-                if (Session.IsNewObject(this))
+                if (!Session.IsNewObject(this))
                 {
-                    // Для нового груза
-                    newTotalWeight = Picket.Weight + this.Weight;
-                }
-                else
-                {
-                    // Для существующего груза
                     decimal oldWeight = (decimal)GetMemberValue(nameof(Weight));
-                    newTotalWeight = Picket.Weight - oldWeight + this.Weight;
+                    totalWeightInSession = totalWeightInSession - oldWeight + this.Weight;
                 }
 
-                if (newTotalWeight > Picket.Capacity)
+                if (totalWeightInSession > Picket.Capacity)
                 {
                     throw new UserFriendlyException($"Невозможно сохранить: превышена вместимость. " +
-                    $"максимальная вместимость: {Picket.Capacity}, " +
-                    $"превышение вместимости на {newTotalWeight - Picket.Capacity}");
-
+                    $"Максимальная вместимость: {Picket.Capacity}, " +
+                    $"превышение вместимости на: {totalWeightInSession - Picket.Capacity}");
                 }
             }
 
-            // Логирование истории изменений (только при IsSingleExecuteOnSaving() == true)
             if (IsSingleExecuteOnSaving())
             {
                 bool isNew = Session.IsNewObject(this);
@@ -97,43 +84,31 @@ namespace TestTask.Module.BusinessObjects
 
         protected bool IsSingleExecute()
         {
-            
-            // При первой вызове Session.ObjectLayer == SecuredSessionObjectLayer (наследник SessionObjectLayer) или просто SessionObjectLayer - нет на службах, обработается на клиенте (иначе не логируются изменения в объектах)
-            // При запуске из клиента
-            if (false && Session?.ObjectLayer is SessionObjectLayer) { return true; }
-            // При запуске из службы
-            else if (!false && (!(Session?.ObjectLayer is SessionObjectLayer sessionObjectLayer) || sessionObjectLayer.ParentSession == null)) { return true; }
+            if (Session?.ObjectLayer is SessionObjectLayer) { return true; }
+            else if (!(Session?.ObjectLayer is SessionObjectLayer sessionObjectLayer) || sessionObjectLayer.ParentSession == null) { return true; }
             else return false;
         }
 
-        /// <summary>
-        /// Исключить повторное выполнение в OnSaving()
-        /// </summary>
         protected bool IsSingleExecuteOnSaving()
         {
-            return IsSingleExecute() // Исключить повторное выполнение
-            && !Session.IsObjectMarkedDeleted(this); // Если объект не помечен как удаленный
+            return IsSingleExecute() && !Session.IsObjectMarkedDeleted(this);
         }
 
-        // Обработчик удаления объекта
         protected override void OnDeleting()
         {
-            CreateHistoryRecord("Удаление груза с пикета", -Weight); // Записываем в историю факт удаления
-            base.OnDeleting(); // Вызываем базовый метод
+            CreateHistoryRecord("Удаление груза с пикета", -Weight);
+            base.OnDeleting();
         }
 
-        // Создает запись в истории изменений
         private void CreateHistoryRecord(string actionType, decimal weightChange)
         {
             if (Picket?.Site == null) return;
 
-            // Рассчитываем актуальный вес площадки
             decimal actualWeight = Picket.Site.Weight;
 
-            // Если это удаление - корректируем вес
             if (actionType.StartsWith("Удаление"))
             {
-                actualWeight -= Weight; // Вычитаем вес удаляемого груза
+                actualWeight -= Weight;
             }
 
             var record = new HistoryRecord(Session)
@@ -144,8 +119,8 @@ namespace TestTask.Module.BusinessObjects
                 Site = Picket.Site,
                 Warehouse = Picket.Site.Warehouse,
                 CargoPicket = this,
-                CurrentTotalWeight = actualWeight, // Используем скорректированный вес
-                PicketInfo = $"Пикет {Picket.PicketNumber} (Площадка {Picket.Site.CalculatedSiteNumber})"
+                CurrentTotalWeight = actualWeight,
+                PicketInfo = $"Пикет {Picket.FullPicketNumber} (Площадка {Picket.Site.CalculatedSiteNumber})"
             };
 
             record.Save();
@@ -153,11 +128,8 @@ namespace TestTask.Module.BusinessObjects
         #endregion
 
         #region Свойства
-        /// <summary>
-        /// Вес груза (в килограммах)
-        /// </summary>
-        [ModelDefault("DisplayFormat", "# ##0.000")] // Формат отображения
-        [ModelDefault("EditMask", "# ##0.000")] // Маска ввода
+        [ModelDefault("DisplayFormat", "# ##0.000")]
+        [ModelDefault("EditMask", "# ##0.000")]
         [RuleRequiredField]
         public decimal Weight
         {
@@ -165,10 +137,7 @@ namespace TestTask.Module.BusinessObjects
             set { SetPropertyValue(nameof(Weight), ref _weight, value); }
         }
 
-        /// <summary>
-        /// Пикет, на котором размещен груз
-        /// </summary>
-        [Association("Picket-CargoPickets")] // Связь с пикетом
+        [Association("Picket-CargoPickets")]
         [RuleRequiredField]
         public Picket Picket
         {
@@ -176,10 +145,18 @@ namespace TestTask.Module.BusinessObjects
             set { SetPropertyValue(nameof(Picket), ref _picket, value); }
         }
 
-        /// <summary>
-        /// Тип груза
-        /// </summary>
-        [Association("Cargo-CargoPickets")] // Связь с типом груза
+        // Вычисляемое свойство для отображения полного номера пикета
+        [VisibleInListView(false)]
+        [VisibleInDetailView(false)]
+        [VisibleInLookupListView(false)]
+        [ModelDefault("DisplayFormat", "{0}")]
+        [ModelDefault("AllowEdit", "False")]
+        public string FullPicketNumber
+        {
+            get { return Picket?.FullPicketNumber ?? string.Empty; }
+        }
+
+        [Association("Cargo-CargoPickets")]
         [RuleRequiredField]
         public Cargo Cargo
         {
@@ -187,10 +164,7 @@ namespace TestTask.Module.BusinessObjects
             set { SetPropertyValue(nameof(Cargo), ref _cargo, value); }
         }
 
-        /// <summary>
-        /// История изменений по данному грузу
-        /// </summary>
-        [Association("CargoPicket-HistoryRecords")] // Связь с историей изменений
+        [Association("CargoPicket-HistoryRecords")]
         public XPCollection<HistoryRecord> HistoryRecords => GetCollection<HistoryRecord>(nameof(HistoryRecords));
         #endregion
     }

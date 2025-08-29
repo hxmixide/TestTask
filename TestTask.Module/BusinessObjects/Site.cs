@@ -44,7 +44,7 @@ namespace TestTask.Module.BusinessObjects
         {
 
             base.OnSaving();
-    
+
             if (!IsSingleExecuteOnSaving())
             {
                
@@ -95,6 +95,8 @@ namespace TestTask.Module.BusinessObjects
             base.OnDeleting();
         }
 
+
+
         /// <summary>
         /// Создает запись в истории изменений
         /// </summary>   
@@ -121,7 +123,7 @@ namespace TestTask.Module.BusinessObjects
                 return null; // Возвращаем null, если нет пикетов
 
             var picketNumbers = Pickets
-                .Select(p => int.TryParse(p.PicketNumber, out var num) ? num : (int?)null)
+                .Select(p => int.TryParse(p.FullPicketNumber, out var num) ? num : (int?)null)
                 .Where(n => n.HasValue)
                 .Select(n => n.Value)
                 .OrderBy(n => n)
@@ -176,15 +178,22 @@ namespace TestTask.Module.BusinessObjects
             get { return _warehouse; }
             set
             {
-                string oldWh = _warehouse?.WarehouseNumber;
-                bool IsEdit = SetPropertyValue(nameof(Warehouse), ref _warehouse, value);
+                // Запрещаем изменение после создания объекта
+                if (!Session.IsNewObject(this) && !IsLoading && !IsSaving && !IsDeleted && _warehouse != null)
+                {
+                    throw new UserFriendlyException("Склад нельзя изменить после создания объекта");
+                }
+
+                string oldWh = _warehouse?.WarehouseNumber; // Записываем старое значение склада
+                bool IsEdit = SetPropertyValue(nameof(Warehouse), ref _warehouse, value); 
+
                 if (Session.IsNewObject(this))
                 {
                     return;
                 }
                 else if (IsEdit && !IsLoading && !IsSaving && !IsDeleted)
                 {
-                    RecordHistory($"Перенос со склада '{oldWh}' на склад '{_warehouse?.WarehouseNumber}'");
+                    RecordHistory($"Перенос со склада '{oldWh}' на склад '{_warehouse?.WarehouseNumber}'"); // Отображение в истории
                 }
             }
         }
